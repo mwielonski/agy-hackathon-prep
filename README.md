@@ -4,13 +4,42 @@ Welcome to the **Antigravity (AGY) Hackathon Enablement Repository**! This repos
 
 ---
 
+## ⚡ 5-Minute Quick Start: How to Use This Repo
+
+You don't need a complex setup to get started! Follow these simple steps:
+
+### Option 1: Clone Locally (Recommended)
+1. **Clone this repository**:
+   ```bash
+   git clone https://github.com/mwielonski/agy-hackathon-prep.git
+   cd agy-hackathon-prep
+   ```
+2. **Launch AGY**:
+   - **Using AGY Desktop App (2.0)**: Open the app, click **Open Project**, and select the `agy-hackathon-prep` folder.
+   - **Using VS Code Extension**: Open VS Code in this directory and start a chat session in the sidebar or press `⌘+I` / `Ctrl+I`.
+   - **Using AGY CLI**: Run `agy` in your terminal inside this directory.
+
+3. **Start Building with AGY**:
+   Open a chat with AGY and copy-paste this prompt:
+   > *"AGY, inspect the `starter-kit/` folder in this repo and help me build a hackathon prototype that queries BigQuery!"*
+
+---
+
+### Option 2: Download as ZIP (No Git Required)
+1. Click the green **Code** button at the top of this GitHub page $\rightarrow$ **Download ZIP**.
+2. Extract the ZIP file on your computer.
+3. Open the extracted folder in AGY (Desktop App, VS Code, or CLI) and start chatting!
+
+---
+
 ## 📂 Repository Contents & Navigation
 
 ```
 agy-hackathon-prep/
-├── README.md                           # Landing page & navigation guide
+├── README.md                           # Main portal & quick-start guide
 ├── docs/
 │   ├── agy_101_overview.md             # AGY 101: Harness vs LLM, Flavors (2.0/IDE/CLI) & Install
+│   ├── agent_lifecycle_and_gemini_enterprise.md # End-to-End: Scaffold -> Deploy -> Publish to Gemini Enterprise
 │   ├── agy_cheat_sheet.md               # 1-Page Day-Of Quick Reference & Prompt Guide
 │   ├── pre_hackathon_enablement_package.md # 4-Module Pre-Hackathon Learning Package
 │   └── implementation_plan.md          # Program Strategy, Persona Specs & Timeline
@@ -24,31 +53,29 @@ agy-hackathon-prep/
 
 ---
 
-## 🚀 Quick Links for Participants
+## 🚀 Key Documentation Guides
 
 ### 1. AGY 101 Overview & Installation Guide
 👉 **[Read AGY 101: Overview, Harness vs. LLM & Setup](docs/agy_101_overview.md)**
-- **What is AGY?**: Agentic pair programmer vs. raw frontier model (LLM).
-- **The 3 AGY Flavors**: Antigravity 2.0 Desktop App, VS Code Extension, and CLI (`agy`).
-- **Installation & Setup**: Step-by-step instructions for all three variants.
+- What is AGY? Agentic pair programmer vs. raw frontier model (LLM).
+- The 3 AGY Flavors: Antigravity 2.0 Desktop App, VS Code Extension, and CLI (`agy`).
+- Step-by-step installation instructions.
 
-### 2. Day-Of Cheat Sheet & Prompt Reference
+### 2. End-to-End Agent Lifecycle: Building to Gemini Enterprise App
+👉 **[Read Agent Lifecycle & Gemini Enterprise Publishing Guide](docs/agent_lifecycle_and_gemini_enterprise.md)**
+- **Stage 1 (Build)**: Scaffolding ADK agents and adding BigQuery tools with AGY.
+- **Stage 2 (Test)**: Running local evaluations (`google-agents-cli-eval`).
+- **Stage 3 (Deploy)**: Deploying to Cloud Run or Agent Runtime (`google-agents-cli-deploy`).
+- **Stage 4 (Publish)**: Registering your agent directly into a **Gemini Enterprise App** (`agents-cli publish gemini-enterprise`).
+
+### 3. Day-Of Cheat Sheet & Prompt Reference
 👉 **[Read the 1-Page Day-Of Cheat Sheet](docs/agy_cheat_sheet.md)**
-- **60-Second Quick Start**: How to interact with AGY.
-- **Key Slash Commands**: `/grill-me`, `/goal`, `/schedule`, `/learn`.
-- **Copy-Paste Power Prompts**: BigQuery data exploration, ADK agent building, UI prototyping.
+- 60-Second Quick Start and slash commands (`/grill-me`, `/goal`, `/schedule`, `/learn`).
+- Copy-paste power prompts for BigQuery, ADK agents, and UI prototyping.
 
-### 3. Pre-Hackathon Enablement Package
+### 4. Pre-Hackathon Enablement Package
 👉 **[Go to Pre-Hackathon Learning Modules](docs/pre_hackathon_enablement_package.md)**
-- **Module 1**: AGY Core Concepts & Fundamentals (15 Min)
-- **Module 2**: Democratizing Data with BigQuery & 3P Connectors (20 Min)
-- **Module 3**: Building & Deploying Agents with Google ADK (30 Min)
-- **Module 4**: Live Workshop & Video Outlines
-
-### 4. Program Strategy & Organizer Guide
-👉 **[View Full Enablement Program Plan](docs/implementation_plan.md)**
-- Target persona matrix (Technical SMEs vs. Non-Technical users).
-- Event rollout schedule & execution timeline.
+- Self-paced learning modules & codelabs for technical and business users.
 
 ---
 
