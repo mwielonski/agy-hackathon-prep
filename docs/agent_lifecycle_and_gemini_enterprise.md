@@ -1,6 +1,6 @@
 # End-to-End BQ Data Agent Lifecycle: Building BigQuery Data Agents & Publishing to Gemini Enterprise App
 
-This guide walks you through the primary hackathon goal: **Building a BigQuery Data Agent with Antigravity (AGY)** that democratizes access to enterprise BigQuery data, wrapping it with the **Google Agent Development Kit (ADK)**, deploying it, and publishing it directly into a **Gemini Enterprise App**.
+This guide walks you through the primary hackathon goal: **Building a BigQuery Data Agent with Antigravity (AGY)** that democratizes access to enterprise BigQuery data, wrapping it with the **Google Agent Development Kit (ADK)**, testing it locally using **ADK Web UI**, deploying it, and publishing it directly into a **Gemini Enterprise App**.
 
 ---
 
@@ -26,8 +26,47 @@ Participants will build **BigQuery Data Agents** that allow enterprise users to 
 |          |                                                                                            |
 |          v                                                                                            |
 |  [ BigQuery & Enterprise Data Lakehouse (3P Connectors) ]                                            |
-+-------------------------------------------------------------------------------------------------------+
+|+-------------------------------------------------------------------------------------------------------+
 ```
+
+---
+
+## 💻 ADK Web 101: Local Unit Development, Debugging & Inspection UI
+
+Before deploying your agent to Google Cloud, ADK provides a built-in local development server called **ADK Web (`adk web`)**. 
+
+```
++---------------------------------------------------------------------------------------------------------+
+|                                    ADK WEB LOCAL INSPECTION UI                                          |
+|                                                                                                         |
+|  [ Local Browser UI: http://localhost:8080 ]                                                            |
+|  +---------------------------------------------------------------------------------------------------+  |
+|  |  💬 Live Interactive Agent Chat                                                                   |  |
+|  |  🛠️ Real-Time Tool Call Logs (BigQuery SQL queries & parameters)                                  |  |
+|  |  🧠 LLM "Thought Signature" & Chain-of-Thought Inspection                                         |  |
+|  |  ⏱️ Query Latency, Token Usage & Memory State Viewer                                               |  |
+|  +---------------------------------------------------------------------------------------------------+  |
++---------------------------------------------------------------------------------------------------------+
+```
+
+### What is ADK Web?
+**ADK Web** is an interactive, browser-based developer dashboard bundled with the Agent Development Kit (`adk`). It provides a local "inner-loop" sandbox for unit testing agent logic, inspecting tool executions, and step-debugging LLM reasoning before cloud deployment.
+
+### Why Use ADK Web During the Hackathon?
+1. **Zero-Latency Local Iteration**: Test agent prompts and BigQuery tool calls locally without waiting for cloud deployment cycles.
+2. **Inspect SQL Tool Calls**: Watch in real-time as the agent crafts BigQuery SQL queries, passes parameters, and receives JSON responses.
+3. **Debug "Thought Signatures"**: Inspect the exact reasoning steps (chain-of-thought) the LLM took before choosing to invoke a tool or return an answer.
+4. **Inspect State & Memory**: View conversation session variables, user context, and memory state across multi-turn chats.
+
+### 🚀 How to Launch ADK Web
+Inside your scaffolded ADK agent project folder, run:
+
+```bash
+adk web
+```
+- Open your browser to `http://localhost:8080` (or `http://127.0.0.1:8080`).
+- Select your agent module (e.g. `healthcare_data_agent`).
+- Type test queries (e.g. *"Show all denied claims for member MEM-1001"*) and watch tool execution logs unfold live in the right panel!
 
 ---
 
@@ -51,17 +90,20 @@ Participants will build **BigQuery Data Agents** that allow enterprise users to 
 
 ---
 
-### Stage 2: Test & Verify Queries Locally
+### Stage 2: Test & Verify Queries Locally with ADK Web
 
 Validate that your agent accurately generates BigQuery SQL and handles missing tables or permission errors gracefully.
 
-1. **Test Data Queries Locally**:
+1. **Unit Testing via ADK Web UI**:
+   Launch `adk web` and test interactive queries in the local browser UI to verify tool parameters and SQL syntax.
+
+2. **CLI Quick Run**:
    ```bash
    agents-cli run
    ```
    *Prompt test*: `"What were our top 3 revenue-generating product categories in Q3, and what is the forecasted growth for next month?"`
 
-2. **Automated Evaluation against BigQuery Schemas**:
+3. **Automated Evaluation against BigQuery Schemas**:
    > *"AGY, run `google-agents-cli-eval` against `bq-sales-data-agent` to evaluate query correctness and latency on BigQuery test cases."*
 
 ---
