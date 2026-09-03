@@ -11,9 +11,19 @@ Find your background below to follow a tailored learning path designed for your 
 | Persona / Background | Your Primary Goal | Recommended Starting Point |
 | :--- | :--- | :--- |
 | 👔 **Business / Product / Management** | Understand AGY capabilities, write natural language prompts, and create executive summaries without writing code. | 👉 **[Day-Of Cheat Sheet & Business Prompts](docs/agy_cheat_sheet.md)** |
-| 📊 **Data Analysts & Data Engineers** | Profile BigQuery data, inspect schemas in BigQuery Studio, and write Golden SQL queries. | 👉 **[BigQuery Data Profiling & Golden Queries](docs/healthcare_payer_demo_guide.md#step-2-data-profiling-in-bigquery-console-bigquery-studio-explorer)** |
-| 🤖 **AI SMEs & Software Engineers** | Scaffold Python ADK agents, add custom BQ tools, deploy to Vertex AI Runtime, and publish to Gemini Enterprise App. | 👉 **[Healthcare Payer End-to-End Demo Guide](docs/healthcare_payer_demo_guide.md)** |
-| 🛠️ **IT & Cloud Administrators** | Provision GCP infrastructure, enable APIs, configure IAM roles, and set up project permissions. | 👉 **[GCP Infrastructure Setup Guide](docs/healthcare_payer_demo_guide.md#step-1-provision-gcp-infrastructure--synthetic-data)** |
+| 📊 **Data Analysts & Data Engineers** | Profile BigQuery data, inspect schemas in BigQuery Studio, and write Golden SQL queries. | 👉 **[BigQuery Data Profiling & Golden Queries](docs/healthcare_provider_demo_guide.md#step-2-data-profiling-in-bigquery-studio-explorer)** |
+| 🤖 **AI SMEs & Software Engineers** | Scaffold Python ADK agents, add custom BQ tools, deploy to Vertex AI Runtime, and publish to Gemini Enterprise App. | 👉 **[Healthcare Provider End-to-End Demo Guide](docs/healthcare_provider_demo_guide.md)** |
+| 🛠️ **IT & Cloud Administrators** | Provision GCP infrastructure, enable APIs, configure IAM roles, and set up project permissions. | 👉 **[GCP Infrastructure Setup Guide](docs/healthcare_provider_demo_guide.md#step-1-provision-gcp-infrastructure--synthetic-provider-data)** |
+
+---
+
+## 🏥 Featured Demo: Healthcare Provider Scheduling Agent to Gemini Enterprise
+👉 **[Read the Complete Healthcare Provider Demo & Architecture Guide](docs/healthcare_provider_demo_guide.md)**
+- **Architecture Diagrams**: Mermaid sequence and system architecture diagrams showing ADK Agent $\rightarrow$ Vertex AI Runtime $\rightarrow$ Gemini Enterprise App.
+- **Synthetic Clinical Data Included**: `starter-kit/data/synthetic_healthcare_provider_dataset.sql` (Departments, Physicians, Appointments).
+- **Executable Agent Code**: `starter-kit/agents/adk_agent_template/healthcare_provider_agent.py`.
+- **Golden Queries**: `starter-kit/data/golden_provider_queries.sql`.
+- **Complete GCP Setup & Verification**: Step-by-step instructions to build, deploy, publish, and test in **Gemini Enterprise App**.
 
 ---
 
@@ -32,7 +42,7 @@ Find your background below to follow a tailored learning path designed for your 
 
 3. **Build Your BQ Data Agent with AGY**:
    Open a chat with AGY and copy-paste this prompt:
-   > *"AGY, help me build a BigQuery Data Agent using ADK that connects to our synthetic healthcare dataset in `starter-kit/data/synthetic_healthcare_payer_dataset.sql`!"*
+   > *"AGY, help me build a BigQuery Data Agent using ADK that connects to our synthetic healthcare provider dataset in `starter-kit/data/synthetic_healthcare_provider_dataset.sql`!"*
 
 ---
 
@@ -49,7 +59,7 @@ Find your background below to follow a tailored learning path designed for your 
 agy-hackathon-prep/
 ├── README.md                           # Main portal & Persona navigation guide
 ├── docs/
-│   ├── healthcare_payer_demo_guide.md  # End-to-End Demo: Healthcare BQ Agent to Gemini Enterprise
+│   ├── healthcare_provider_demo_guide.md # End-to-End Demo: Healthcare Provider Agent to GE App
 │   ├── agent_lifecycle_and_gemini_enterprise.md # BQ Data Agent Lifecycle Architecture
 │   ├── agy_101_overview.md             # AGY 101: Harness vs LLM, Flavors (2.0/IDE/CLI) & Install
 │   ├── agy_cheat_sheet.md               # 1-Page Day-Of Quick Reference & Business Prompts
@@ -59,11 +69,11 @@ agy-hackathon-prep/
     ├── README.md                       # Starter Kit instructions
     ├── data/
     │   ├── sample_bq_queries.sql       # Enterprise BigQuery data query templates
-    │   ├── golden_healthcare_queries.sql # Few-shot exemplar SQL queries
-    │   └── synthetic_healthcare_payer_dataset.sql # Healthcare claims & members dataset
+    │   ├── golden_provider_queries.sql # Few-shot exemplar SQL queries for Healthcare Provider
+    │   └── synthetic_healthcare_provider_dataset.sql # Hospital departments, doctors & appointments
     └── agents/
         └── adk_agent_template/         # Google ADK Agent template
-            └── healthcare_data_agent.py # Healthcare BQ Data Agent python tools
+            └── healthcare_provider_agent.py # Healthcare Provider BQ Data Agent python tools
 ```
 
 ---
@@ -75,7 +85,7 @@ agy-hackathon-prep/
 | **BigQuery 403 Access Denied** | Missing IAM roles for your user / service account. | Run `gcloud auth application-default login` and assign `roles/bigquery.dataViewer` or `roles/bigquery.admin`. |
 | **Dataset Location Mismatch** | Query created in `us-east1` while dataset is in `US` multi-region. | Ensure `bq --location=us-east1` is specified when creating datasets and running queries. |
 | **Gemini Enterprise App Not Found** | Missing Discovery Engine permissions or app not created yet. | Verify your GCP user has `roles/discoveryengine.editor` and that an app exists under Console $\rightarrow$ Gemini Enterprise $\rightarrow$ Apps. |
-| **LLM SQL Hallucinations** | Agent missing categorical string values or schema constraints. | Ensure Golden Queries from `golden_healthcare_queries.sql` and BigQuery Data Profile insights are provided to AGY during agent prompt setup. |
+| **LLM SQL Hallucinations** | Agent missing categorical string values or schema constraints. | Ensure Golden Queries from `golden_provider_queries.sql` and BigQuery Data Profile insights are provided to AGY during agent prompt setup. |
 
 ---
 
