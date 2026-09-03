@@ -3,10 +3,11 @@
 This end-to-end tutorial provides a **fully executable Healthcare Payer Data Agent demo** for hackathon organizers and participants to test ahead of time.
 
 It proves that the full path works smoothly:
-1. **Building a BQ Data Agent with AGY & ADK**.
-2. **Provisioning GCP Infrastructure & Synthetic Data**.
-3. **Deploying to Vertex AI Agent Runtime / Cloud Run**.
-4. **Publishing and exercising the Agent inside Gemini Enterprise App**.
+1. **Provisioning GCP Infrastructure & Synthetic Data**.
+2. **Data Profiling in BigQuery** to extract schema metadata, column statistics, and value distributions.
+3. **Building a BQ Data Agent with AGY & ADK** incorporating **Golden Queries** for few-shot LLM guidance.
+4. **Deploying to Vertex AI Agent Runtime / Cloud Run**.
+5. **Publishing and exercising the Agent inside Gemini Enterprise App**.
 
 ---
 
@@ -21,13 +22,13 @@ In healthcare payer organizations (health insurance), customer service reps, cas
 ## 📋 Step-by-Step Setup & Verification Blueprint
 
 ```
-+---------------------------------------------------------------------------------------------------------+
-|                                    DEMO VERIFICATION WORKFLOW                                           |
-|                                                                                                         |
-| 1. GCP Infra & Data  -->  2. Build BQ Agent  -->  3. Deploy to Runtime  -->  4. Publish to GE App       |
-|  (gcloud BQ dataset &     (AGY & ADK Python       (agents-cli deploy to       (agents-cli publish       |
-|   synthetic tables)        agent code)             Vertex AI Agent Runtime)     gemini-enterprise)      |
-+---------------------------------------------------------------------------------------------------------+
++--------------------------------------------------------------------------------------------------------------------+
+|                                    DEMO VERIFICATION WORKFLOW                                                      |
+|                                                                                                                    |
+| 1. GCP Infra & Data  -->  2. Data Profiling  -->  3. Build Agent with   --> 4. Deploy Runtime  --> 5. Publish GE App|
+|  (gcloud BQ dataset &     (Extract Metadata &     Golden Queries             (agents-cli deploy    (agents-cli publish|
+|   synthetic tables)        Column Statistics)     (AGY & ADK Agent)           to Vertex AI)         gemini-enterprise) |
++--------------------------------------------------------------------------------------------------------------------+
 ```
 
 ---
@@ -63,7 +64,13 @@ bq --location=$REGION mk --dataset ${PROJECT_ID}:${DATASET_ID}
 # Populate Synthetic Tables (Members, Claims, Providers)
 bq query --use_legacy_sql=false "
 CREATE OR REPLACE TABLE \`${PROJECT_ID}.${DATASET_ID}.members\` (
-  member_id STRING, first_name STRING, last_name STRING, plan_type STRING, coverage_status STRING, effective_date DATE, copay_amount NUMERIC
+  member_id STRING OPTIONS(description='Unique member ID'), 
+  first_name STRING, 
+  last_name STRING, 
+  plan_type STRING OPTIONS(description='HMO, PPO, EPO, POS'), 
+  coverage_status STRING OPTIONS(description='ACTIVE, INACTIVE, SUSPENDED'), 
+  effective_date DATE, 
+  copay_amount NUMERIC
 );
 
 INSERT INTO \`${PROJECT_ID}.${DATASET_ID}.members\` VALUES
@@ -74,7 +81,14 @@ INSERT INTO \`${PROJECT_ID}.${DATASET_ID}.members\` VALUES
   ('MEM-1005', 'Evan', 'Wright', 'HMO', 'ACTIVE', DATE('2023-11-01'), 15.00);
 
 CREATE OR REPLACE TABLE \`${PROJECT_ID}.${DATASET_ID}.claims\` (
-  claim_id STRING, member_id STRING, service_date DATE, diagnosis_code STRING, procedure_code STRING, billed_amount NUMERIC, paid_amount NUMERIC, claim_status STRING
+  claim_id STRING OPTIONS(description='Unique claim ID'), 
+  member_id STRING, 
+  service_date DATE, 
+  diagnosis_code STRING OPTIONS(description='ICD-10 Code'), 
+  procedure_code STRING OPTIONS(description='CPT Code'), 
+  billed_amount NUMERIC, 
+  paid_amount NUMERIC, 
+  claim_status STRING OPTIONS(description='PAID, DENIED, PENDING')
 );
 
 INSERT INTO \`${PROJECT_ID}.${DATASET_ID}.claims\` VALUES
@@ -88,19 +102,65 @@ INSERT INTO \`${PROJECT_ID}.${DATASET_ID}.claims\` VALUES
 
 ---
 
-## Step 2: Build the BQ Data Agent with AGY & ADK
+## Step 2: Data Profiling in BigQuery (Metadata & Column Statistics)
 
-In your terminal / AGY workspace:
+Before building the agent, **Data Profiling** extracts schema descriptions, column data types, distinct value counts, and null ratios. This profiling metadata is provided to the agent's prompt context so the LLM understands valid column values (e.g., `coverage_status` values are `'ACTIVE'`, `'INACTIVE'`, `'SUSPENDED'`).
 
+### 2.1 Run Profiling Queries in BigQuery
+Run this profiling query to extract schema metadata and column statistics for the `claims` and `members` tables:
+
+```sql
+-- Profile 1: Inspect Column Schemas & Descriptions
+SELECT 
+  table_name, column_name, data_type, is_nullable
+FROM 
+  `<YOUR_GCP_PROJECT_ID>.healthcare_payer_demo.INFORMATION_SCHEMA.COLUMNS`;
+
+-- Profile 2: Value Distribution & Cardinality Check for Claims
+SELECT 
+  claim_status, 
+  COUNT(*) AS status_count, 
+  AVG(billed_amount) AS avg_billed_amount
+FROM 
+  `<YOUR_GCP_PROJECT_ID>.healthcare_payer_demo.claims`
+GROUP BY 1;
+```
+
+### 2.2 Feed Profiling Metadata to AGY
+Ask AGY to inspect the profiled metadata:
+> *"AGY, inspect the profiled metadata for `healthcare_payer_demo` dataset. Note that `claim_status` contains values ('PAID', 'DENIED', 'PENDING') and `plan_type` contains ('HMO', 'PPO', 'EPO'). Ensure all generated queries use these exact string literals."*
+
+---
+
+## Step 3: Build the Agent with Golden Queries (Few-Shot Guidance)
+
+**Golden Queries** are validated baseline SQL queries that act as few-shot exemplars to guide and refine LLM SQL generation.
+
+### 3.1 Review Golden Queries (`starter-kit/data/golden_healthcare_queries.sql`)
+The repository includes pre-built Golden Queries for healthcare payer workflows:
+
+```sql
+-- Golden Query Exemplar: Denied Claims Analysis
+SELECT 
+  claim_id, member_id, service_date, diagnosis_code, procedure_code, billed_amount, claim_status
+FROM 
+  `<YOUR_GCP_PROJECT_ID>.healthcare_payer_demo.claims`
+WHERE 
+  claim_status = 'DENIED'
+ORDER BY 
+  service_date DESC;
+```
+
+### 3.2 Build Agent with AGY & ADK
 1. **Scaffold ADK Agent Project**:
    ```bash
    agents-cli scaffold create --template default healthcare-payer-agent
    cd healthcare-payer-agent
    ```
 
-2. **Add BQ Healthcare Tools**:
-   Copy the pre-built template from `starter-kit/agents/adk_agent_template/healthcare_data_agent.py` into your agent project, or prompt AGY:
-   > *"AGY, configure `healthcare-payer-agent` with python tools that query BigQuery tables `members` and `claims` in dataset `healthcare_payer_demo`."*
+2. **Inject Golden Queries into AGY Agent Prompt**:
+   Instruct AGY to build the agent using the golden query exemplars:
+   > *"AGY, build `healthcare-payer-agent` using `starter-kit/agents/adk_agent_template/healthcare_data_agent.py`. Inject the golden queries from `starter-kit/data/golden_healthcare_queries.sql` as few-shot prompt instructions so the LLM follows our verified SQL patterns."*
 
 3. **Test Agent Locally**:
    ```bash
@@ -110,10 +170,9 @@ In your terminal / AGY workspace:
 
 ---
 
-## Step 3: Deploy Agent to Vertex AI Agent Runtime
+## Step 4: Deploy Agent to Vertex AI Agent Runtime
 
 1. **Grant IAM Permissions**:
-   Ensure your deployment service account has BigQuery Data Viewer access:
    ```bash
    gcloud projects add-iam-policy-binding $PROJECT_ID \
      --member="user:$(gcloud config get-value account)" \
@@ -127,11 +186,11 @@ In your terminal / AGY workspace:
      --project-id $PROJECT_ID \
      --region $REGION
    ```
-   *Output*: This creates `deployment_metadata.json` containing `remote_agent_runtime_id`.
+   *Output*: Creates `deployment_metadata.json` containing `remote_agent_runtime_id`.
 
 ---
 
-## Step 4: Publish to Gemini Enterprise App
+## Step 5: Publish to Gemini Enterprise App
 
 1. **Interactive Publishing**:
    ```bash
@@ -144,7 +203,7 @@ In your terminal / AGY workspace:
 
 ---
 
-## Step 5: Exercising the Agent in Gemini Enterprise UI (Hackathon Verification)
+## Step 6: Exercising the Agent in Gemini Enterprise UI (Hackathon Verification)
 
 Log into your **Gemini Enterprise** Web Application and run these test queries:
 
@@ -163,5 +222,6 @@ Log into your **Gemini Enterprise** Web Application and run these test queries:
 | Issue | Verification / Solution |
 | :--- | :--- |
 | BigQuery Access Error | Run `gcloud auth application-default login` and ensure `roles/bigquery.dataViewer` is granted. |
+| LLM SQL Syntax Errors | Ensure Golden Queries from `golden_healthcare_queries.sql` are loaded into the agent system prompt. |
 | Agent Runtime Deployment Failure | Verify Vertex AI API is enabled (`aiplatform.googleapis.com`) and region is `us-east1`. |
 | Gemini Enterprise App Not Found | Ensure Discovery Engine Editor role is assigned on the GCP project containing the Gemini Enterprise App. |
