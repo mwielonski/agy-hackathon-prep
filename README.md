@@ -13,6 +13,15 @@ The core mission for this hackathon is to **democratize enterprise data**:
 
 ---
 
+## 🏥 Complete End-to-End Healthcare Payer Demo Guide
+👉 **[Read the Healthcare Payer Demo & Verification Guide](docs/healthcare_payer_demo_guide.md)**
+- **Synthetic Data Included**: `starter-kit/data/synthetic_healthcare_payer_dataset.sql` (Members, Claims, Providers).
+- **Executable Agent Code**: `starter-kit/agents/adk_agent_template/healthcare_data_agent.py`.
+- **Complete GCP Setup**: `gcloud` and `bq` infrastructure commands.
+- **End-to-End Verification**: Step-by-step instructions to build, deploy, publish, and test in **Gemini Enterprise App** before hackathon day!
+
+---
+
 ## ⚡ 5-Minute Quick Start: How to Use This Repo
 
 ### Option 1: Clone Locally (Recommended)
@@ -28,7 +37,7 @@ The core mission for this hackathon is to **democratize enterprise data**:
 
 3. **Build Your First BQ Data Agent with AGY**:
    Open a chat with AGY and copy-paste this prompt:
-   > *"AGY, help me build a BigQuery Data Agent using ADK that connects to our sample BigQuery dataset in `starter-kit/data/sample_bq_queries.sql`!"*
+   > *"AGY, help me build a BigQuery Data Agent using ADK that connects to our synthetic healthcare dataset in `starter-kit/data/synthetic_healthcare_payer_dataset.sql`!"*
 
 ---
 
@@ -45,7 +54,8 @@ The core mission for this hackathon is to **democratize enterprise data**:
 agy-hackathon-prep/
 ├── README.md                           # Main portal & quick-start guide
 ├── docs/
-│   ├── agent_lifecycle_and_gemini_enterprise.md # End-to-End: BQ Data Agent -> Deploy -> Gemini Enterprise
+│   ├── healthcare_payer_demo_guide.md  # End-to-End Demo: Healthcare BQ Agent to Gemini Enterprise
+│   ├── agent_lifecycle_and_gemini_enterprise.md # BQ Data Agent Lifecycle Architecture
 │   ├── agy_101_overview.md             # AGY 101: Harness vs LLM, Flavors (2.0/IDE/CLI) & Install
 │   ├── agy_cheat_sheet.md               # 1-Page Day-Of Quick Reference & Prompt Guide
 │   ├── pre_hackathon_enablement_package.md # 4-Module Pre-Hackathon Learning Package
@@ -53,36 +63,12 @@ agy-hackathon-prep/
 └── starter-kit/                        # Pre-configured hackathon project templates
     ├── README.md                       # Starter Kit instructions
     ├── data/
-    │   └── sample_bq_queries.sql       # Enterprise BigQuery data query templates
+    │   ├── sample_bq_queries.sql       # Enterprise BigQuery data query templates
+    │   └── synthetic_healthcare_payer_dataset.sql # Healthcare claims & members dataset
     └── agents/
         └── adk_agent_template/         # Google ADK Agent template
+            └── healthcare_data_agent.py # Healthcare BQ Data Agent python tools
 ```
-
----
-
-## 🚀 Key Documentation Guides
-
-### 1. Building BigQuery Data Agents & Publishing to Gemini Enterprise App
-👉 **[Read BQ Data Agent Lifecycle & Gemini Enterprise Publishing Guide](docs/agent_lifecycle_and_gemini_enterprise.md)**
-- **Stage 1 (Build)**: Scaffolding BQ Data Agents with ADK and attaching schema/SQL tools using AGY.
-- **Stage 2 (Test)**: Running local SQL evaluations (`google-agents-cli-eval`).
-- **Stage 3 (Deploy)**: Deploying BQ Data Agents to Cloud Run or Vertex AI Agent Runtime.
-- **Stage 4 (Publish)**: Registering BQ Data Agents into **Gemini Enterprise Apps** (`agents-cli publish gemini-enterprise`).
-
-### 2. AGY 101 Overview & Installation Guide
-👉 **[Read AGY 101: Overview, Harness vs. LLM & Setup](docs/agy_101_overview.md)**
-- What is AGY? Agentic pair programmer vs. raw frontier model (LLM).
-- The 3 AGY Flavors: Antigravity 2.0 Desktop App, VS Code Extension, and CLI (`agy`).
-- Step-by-step installation instructions.
-
-### 3. Day-Of Cheat Sheet & Prompt Reference
-👉 **[Read the 1-Page Day-Of Cheat Sheet](docs/agy_cheat_sheet.md)**
-- 60-Second Quick Start and slash commands (`/grill-me`, `/goal`, `/schedule`, `/learn`).
-- Copy-paste power prompts for BigQuery, ADK agents, and UI prototyping.
-
-### 4. Pre-Hackathon Enablement Package
-👉 **[Go to Pre-Hackathon Learning Modules](docs/pre_hackathon_enablement_package.md)**
-- Self-paced learning modules & codelabs for technical and business users.
 
 ---
 
