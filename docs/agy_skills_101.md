@@ -4,6 +4,19 @@ This guide provides a clear, 101-level overview of **Antigravity (AGY) Skills an
 
 ---
 
+## 📺 Video Learning Resources (Recommended Watching)
+
+To deepen your understanding before hackathon day, explore these short, targeted video resources covering Antigravity, AGY Skills, Google Agent Development Kit (ADK), and Specifications:
+
+| Video Title | Topic & Duration | Key Takeaways & Persona Relevance | Link |
+| :--- | :--- | :--- | :--- |
+| **Introducing Agent Development Kit (ADK)** *(Google for Developers)* | **ADK Core Architecture & Agent Design** (~8 mins) | **All Personas / AI Developers**: Overview of the open-source ADK framework, local debugging UI, tool definitions, and multi-agent coordination. | [Watch Video](https://www.youtube.com/watch?v=AUZIYQH9yiIJ2jEUfV7wiu34Y9PXmVPBCu4hgjV9RA-ZwdLGCu_dmuYRy_YeaaFO8AU2CNZEYmWuDHI9gdCFbfl9W18BPQ94LX3a7dcrd0T2OVbzSUzmdJkP-LZV7Ttmr7YcXAy-YSHTGJY=) |
+| **Build an AI Agent with Gemini & ADK** *(Google for Developers)* | **Agent Hands-on & Tool Calling** (~10 mins) | **Data Analysts & AI Developers**: Walkthrough on initializing ADK projects, tool definitions, Gemini model configuration, and inspecting LLM reasoning chains. | [Watch Video](https://www.youtube.com/watch?v=AUZIYQG9RF5UUQZ0SOM2yeYu3VAhP2z3Q4xpZEjUF1UuCa8HGK0sCSv0dnKyla70quHBEn3lhiO2L__mY9--JZi8niKOyOWzcaO-IkntORKz5RbH2700jLYzVuuUptjdS1AjhPpoJeH18Uk=) |
+| **Deploy Your First Agent to Vertex AI Agent Engine** | **Cloud Deployment & Runtime Specs** (~12 mins) | **IT Admins & Cloud Engineers**: Environment configuration, managing session state, and deploying ADK agents to Vertex AI Agent Engine and Cloud Run. | [Watch Video](https://www.youtube.com/watch?v=AUZIYQHuub6i-fC6sX_Iq4rTDkUFhsWtNq9YC8tKJ41nQBBo_gcBGoB6j7QVI7vrGZlTXzMojKSWQpiT0wB3ojt4tNJTHLeHUjRfQh3zd5Ea6wupyuvkFL0HKIpHwmrBbbVo5QeGPmxYeyc=) |
+| **Agent Evaluation with ADK & Vertex AI** *(Google Cloud Tech)* | **Agent Quality & Specification Verification** (~15 mins) | **Business Leaders & AI Architects**: How to define evaluation specs, test agent quality against business ground truth, and run Vertex AI GenAI evaluations. | [Watch Video](https://www.youtube.com/watch?v=AUZIYQGpDDZMC0z3n-zpeaA9QGuRK5YyuGTX58ca-kbxX-wqok6OWtuD43R_3TANq5YyKJnLuPfR4YZn3HAjicG2TTKb_u0HRu_aYWLCaTaS5hHAKLZIEzo7pp6imt1ntfoZ1oLkfrt2TG0=) |
+
+---
+
 ## 🔍 Skills vs. Specifications: What's the Difference?
 
 To build effective AI agents, it is critical to understand the distinction between a **Skill** and a **Specification**, and how they complement each other:
