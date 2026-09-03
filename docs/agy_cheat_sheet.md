@@ -24,27 +24,37 @@
 
 ---
 
-## 💡 Copy-Paste Power Prompts for the Hackathon
+## 👔 Non-Technical & Business User Prompts (No Code Required!)
 
-### 📊 1. Democratizing Enterprise Data (BigQuery & 3P Data)
+For product managers, business analysts, domain experts, and executives:
+
+### 💡 Business Role-Play & Executive Summary Prompt
 > **Prompt**:
-> *"AGY, inspect the BigQuery dataset `<PROJECT_ID>.<DATASET_NAME>`. Show me the table schemas, identify key customer/usage metrics, and write a SQL query and Python script to generate a summary report with visualizations."*
+> *"AGY, act as my Senior Business Analyst and AI Architect. I want to build a BigQuery Data Agent for `<INSERT_BUSINESS_PROBLEM>`. Help me write a clear 1-page business proposal, define user stories for our agent, and draft plain-English questions that executives can ask our data agent."*
+
+### 📊 Plain-English Insights & Narrative Generation
+> **Prompt**:
+> *"AGY, inspect our synthetic healthcare claims table in `starter-kit/data/synthetic_healthcare_payer_dataset.sql`. Translate the claim status metrics into an executive summary bulleting the top financial risks, denied claim trends, and recommended policy changes."*
+
+---
+
+## 💡 Developer & SME Copy-Paste Power Prompts
+
+### 📊 1. Democratizing Enterprise Data (BigQuery & Data Profiling)
+> **Prompt**:
+> *"AGY, inspect the BigQuery dataset `<PROJECT_ID>.<DATASET_NAME>`. Show me column statistics from BigQuery Studio Data Profile, identify key customer/usage metrics, and write a SQL query to generate a summary report."*
 
 ### 🤖 2. Building & Deploying Agents with Google ADK
 > **Prompt**:
-> *"AGY, use `google-agents-cli-scaffold` to create a new Python ADK agent project. Add a tool that queries our BigQuery dataset, configure state management, and deploy it to Agent Platform using `google-agents-cli-deploy`."*
+> *"AGY, use `google-agents-cli-scaffold` to create a new Python ADK agent project. Inject the golden queries from `starter-kit/data/golden_healthcare_queries.sql` as few-shot prompt exemplars, and deploy it to Agent Platform using `google-agents-cli-deploy`."*
 
-### 💡 3. Business & Non-Technical Users (Concept to Prototype)
-> **Prompt**:
-> *"AGY, act as my Principal AI Architect. I want to build a solution for `<INSERT_USE_CASE>`. Let's run `/grill-me` to refine my design, then build a working interactive web interface prototype using React/Vite."*
-
-### 🔧 4. Debugging & Code Optimization
+### 🔧 3. Debugging & Code Optimization
 > **Prompt**:
 > *"AGY, run the test suite for this repository. If there are any failing tests or errors, analyze the stack trace, fix the underlying bug, and verify that all tests pass cleanly."*
 
 ---
 
-## 🛠️ AGY Core Capabilities & Capabilities Cheat Sheet
+## 🛠️ AGY Core Capabilities Cheat Sheet
 
 - **Subagents (`invoke_subagent`)**: AGY spawns specialized subagents in parallel to research or build complex modules.
 - **Background Tasks**: Long-running commands run in the background while you continue chatting with AGY.
