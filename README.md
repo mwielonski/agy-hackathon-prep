@@ -14,6 +14,7 @@ Find your background below to follow a tailored learning path designed for your 
 | 📊 **Data Analysts & Data Engineers** | Profile BigQuery data, inspect schemas in BigQuery Studio, and write Golden SQL queries. | 👉 **[BigQuery Data Profiling & Golden Queries](docs/healthcare_provider_demo_guide.md#step-2-data-profiling-in-bigquery-studio-explorer)** |
 | 🤖 **AI SMEs & Software Engineers** | Scaffold Python ADK agents, add custom BQ tools, deploy to Vertex AI Runtime, and publish to Gemini Enterprise App. | 👉 **[Healthcare Provider End-to-End Demo Guide](docs/healthcare_provider_demo_guide.md)** |
 | 🛠️ **IT & Cloud Administrators** | Provision GCP infrastructure, enable APIs, configure IAM roles, and set up project permissions. | 👉 **[GCP Infrastructure Setup Guide](docs/healthcare_provider_demo_guide.md#step-1-provision-gcp-infrastructure--synthetic-provider-data)** |
+| 💡 **All Personas (101 Overview)** | Learn how AGY Skills & Specifications work to extend agent capabilities across all teams. | 👉 **[AGY Skills & Specifications 101 Guide](docs/agy_skills_101.md)** |
 
 ---
 
@@ -59,6 +60,7 @@ Find your background below to follow a tailored learning path designed for your 
 agy-hackathon-prep/
 ├── README.md                           # Main portal & Persona navigation guide
 ├── docs/
+│   ├── agy_skills_101.md               # AGY Skills & Specifications 101 Overview for All Personas
 │   ├── healthcare_provider_demo_guide.md # End-to-End Demo: Healthcare Provider Agent to GE App
 │   ├── agent_lifecycle_and_gemini_enterprise.md # BQ Data Agent Lifecycle Architecture
 │   ├── agy_101_overview.md             # AGY 101: Harness vs LLM, Flavors (2.0/IDE/CLI) & Install
