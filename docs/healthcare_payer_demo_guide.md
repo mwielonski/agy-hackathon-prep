@@ -4,7 +4,7 @@ This end-to-end tutorial provides a **fully executable Healthcare Payer Data Age
 
 It proves that the full path works smoothly:
 1. **Provisioning GCP Infrastructure & Synthetic Data**.
-2. **Data Profiling in BigQuery** to extract schema metadata, column statistics, and value distributions.
+2. **Data Profiling in BigQuery Console** using the built-in **Data Profile** feature in BigQuery Studio Explorer.
 3. **Building a BQ Data Agent with AGY & ADK** incorporating **Golden Queries** for few-shot LLM guidance.
 4. **Deploying to Vertex AI Agent Runtime / Cloud Run**.
 5. **Publishing and exercising the Agent inside Gemini Enterprise App**.
@@ -25,9 +25,9 @@ In healthcare payer organizations (health insurance), customer service reps, cas
 +--------------------------------------------------------------------------------------------------------------------+
 |                                    DEMO VERIFICATION WORKFLOW                                                      |
 |                                                                                                                    |
-| 1. GCP Infra & Data  -->  2. Data Profiling  -->  3. Build Agent with   --> 4. Deploy Runtime  --> 5. Publish GE App|
-|  (gcloud BQ dataset &     (Extract Metadata &     Golden Queries             (agents-cli deploy    (agents-cli publish|
-|   synthetic tables)        Column Statistics)     (AGY & ADK Agent)           to Vertex AI)         gemini-enterprise) |
+| 1. GCP Infra & Data  -->  2. BQ Studio Profiling --> 3. Build Agent with   --> 4. Deploy Runtime  --> 5. Publish GE App|
+|  (gcloud BQ dataset &     (Built-in BQ Explorer   Golden Queries             (agents-cli deploy    (agents-cli publish|
+|   synthetic tables)        Data Profile Button)    (AGY & ADK Agent)           to Vertex AI)         gemini-enterprise) |
 +--------------------------------------------------------------------------------------------------------------------+
 ```
 
@@ -102,33 +102,35 @@ INSERT INTO \`${PROJECT_ID}.${DATASET_ID}.claims\` VALUES
 
 ---
 
-## Step 2: Data Profiling in BigQuery (Metadata & Column Statistics)
+## Step 2: Data Profiling in BigQuery Console (BigQuery Studio Explorer)
 
-Before building the agent, **Data Profiling** extracts schema descriptions, column data types, distinct value counts, and null ratios. This profiling metadata is provided to the agent's prompt context so the LLM understands valid column values (e.g., `coverage_status` values are `'ACTIVE'`, `'INACTIVE'`, `'SUSPENDED'`).
+Before building the agent, use BigQuery's **built-in Data Profiling feature** directly in the Google Cloud Console to inspect table schemas, column statistics, value distributions, and null ratios.
 
-### 2.1 Run Profiling Queries in BigQuery
-Run this profiling query to extract schema metadata and column statistics for the `claims` and `members` tables:
+### 2.1 Using the Built-in Data Profiling Button in BigQuery
+1. Open the [Google Cloud Console $\rightarrow$ BigQuery Studio](https://console.cloud.google.com/bigquery).
+2. In the left-hand **Explorer** panel, expand your project and navigate to `${PROJECT_ID} -> healthcare_payer_demo`.
+3. Click on a table (e.g., `claims` or `members`).
+4. In the table details pane on the right, click the **Data Profile** tab / **Profile Data** button.
+5. Review column statistics:
+   - **Distinct Values & Top Categories**: See exact categorical values (e.g., `claim_status` values: `'PAID'`, `'DENIED'`, `'PENDING'`; `plan_type` values: `'HMO'`, `'PPO'`, `'EPO'`).
+   - **Null Percentages & Data Types**: Confirm key columns like `member_id` and `service_date` are non-null.
 
-```sql
--- Profile 1: Inspect Column Schemas & Descriptions
-SELECT 
-  table_name, column_name, data_type, is_nullable
-FROM 
-  `<YOUR_GCP_PROJECT_ID>.healthcare_payer_demo.INFORMATION_SCHEMA.COLUMNS`;
-
--- Profile 2: Value Distribution & Cardinality Check for Claims
-SELECT 
-  claim_status, 
-  COUNT(*) AS status_count, 
-  AVG(billed_amount) AS avg_billed_amount
-FROM 
-  `<YOUR_GCP_PROJECT_ID>.healthcare_payer_demo.claims`
-GROUP BY 1;
+```
++-----------------------------------------------------------------------------------+
+|  BIGQUERY STUDIO EXPLORER -> TABLE: healthcare_payer_demo.claims                   |
+|                                                                                   |
+|  [ Schema ]  [ Details ]  [ Preview ]  [ DATA PROFILE ]  <-- CLICK HERE           |
+|  +-----------------------------------------------------------------------------+  |
+|  | Column Name   | Data Type | Distinct Values | Top Categorical Values        |  |
+|  | claim_status  | STRING    | 3               | PAID (60%), DENIED (20%)      |  |
+|  | billed_amount | NUMERIC   | 5               | Min: 200.00, Max: 500.00      |  |
+|  +-----------------------------------------------------------------------------+  |
++-----------------------------------------------------------------------------------+
 ```
 
-### 2.2 Feed Profiling Metadata to AGY
-Ask AGY to inspect the profiled metadata:
-> *"AGY, inspect the profiled metadata for `healthcare_payer_demo` dataset. Note that `claim_status` contains values ('PAID', 'DENIED', 'PENDING') and `plan_type` contains ('HMO', 'PPO', 'EPO'). Ensure all generated queries use these exact string literals."*
+### 2.2 Feed Profiling Insights to AGY
+Copy or summarize the profile insights into your prompt to AGY:
+> *"AGY, I used the BigQuery Studio Data Profile button on `healthcare_payer_demo.claims` and `members`. Note that `claim_status` has values ('PAID', 'DENIED', 'PENDING') and `plan_type` has values ('HMO', 'PPO', 'EPO'). Ensure all generated queries match these exact categorical string literals."*
 
 ---
 
@@ -158,9 +160,9 @@ ORDER BY
    cd healthcare-payer-agent
    ```
 
-2. **Inject Golden Queries into AGY Agent Prompt**:
-   Instruct AGY to build the agent using the golden query exemplars:
-   > *"AGY, build `healthcare-payer-agent` using `starter-kit/agents/adk_agent_template/healthcare_data_agent.py`. Inject the golden queries from `starter-kit/data/golden_healthcare_queries.sql` as few-shot prompt instructions so the LLM follows our verified SQL patterns."*
+2. **Inject Golden Queries & Profile Metadata into AGY**:
+   Instruct AGY to build the agent using the golden query exemplars and BigQuery profile metadata:
+   > *"AGY, build `healthcare-payer-agent` using `starter-kit/agents/adk_agent_template/healthcare_data_agent.py`. Inject the golden queries from `starter-kit/data/golden_healthcare_queries.sql` and our BigQuery Data Profile insights as few-shot prompt instructions so the LLM follows our verified SQL patterns."*
 
 3. **Test Agent Locally**:
    ```bash
