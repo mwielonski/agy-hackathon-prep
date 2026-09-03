@@ -1,88 +1,110 @@
 # AGY Skills & Specifications 101: Extending Agent Capabilities
 
-This guide provides a clear, 101-level overview of **Antigravity (AGY) Skills & Specifications**, explained in plain language tailored for every hackathon persona—from **Business Leaders and Product Managers** to **Data Analysts, AI Developers, and IT System Admins**.
+This guide provides a clear, 101-level overview of **Antigravity (AGY) Skills and Specifications**, explaining what they are, how they differ, and how they work together to guide AI behavior—tailored for every hackathon persona (Business, Data Analysts, AI Developers, IT Admins).
 
 ---
 
-## 🎯 What is an AGY Skill? (In Simple Terms)
+## 🔍 Skills vs. Specifications: What's the Difference?
 
-An **AGY Skill** is an **on-demand playbook or capability package** that teaches Antigravity how to perform specialized workflows, follow domain-specific guidelines, or interact with external systems.
+To build effective AI agents, it is critical to understand the distinction between a **Skill** and a **Specification**, and how they complement each other:
 
-Think of an AGY Skill as a **"Standard Operating Procedure (SOP)"** that you hand to a highly capable human assistant:
-- **Without a Skill**: AGY relies on its general knowledge.
-- **With a Skill**: AGY follows your exact team standards, runs pre-approved scripts, uses your specific database schemas, and executes multi-step workflows without making assumptions.
+```
++---------------------------------------------------------------------------------------------------------+
+|                                    SKILLS vs. SPECIFICATIONS                                            |
+|                                                                                                         |
+|  📘 SPECIFICATION ("The Blueprint / Rules")  |  ⚡ SKILL ("The Execution Package / Action")              |
+|  - Written contract, rules, or schemas      |  - The active container/folder loaded into AGY          |
+|  - Defines WHAT should be built or followed |  - Defines HOW AGY executes tools and multi-step tasks  |
+|  - E.g., OpenAPI spec, SQL schema, Rules    |  - E.g., The SKILL.md file + executable Python scripts  |
++---------------------------------------------------------------------------------------------------------+
+```
+
+| Concept | What It Is | Analogy | Example in Hackathon |
+| :--- | :--- | :--- | :--- |
+| **Specification (Spec)** | The **written blueprint, rules, or data contract** defining *what* the system or data must conform to. | **Architectural Blueprints & Building Code** | A BigQuery SQL schema definition, an API spec (`openapi.json`), or a business metric rule file. |
+| **Skill** | The **active capability package** that AGY loads into context to execute actions following the Spec. | **The Licensed Electrician / Contractor** | A folder containing `SKILL.md` + Python scripts that AGY uses to query BigQuery and format results. |
+
+---
+
+## 🤝 How Skills and Specifications Work Together
+
+A **Skill** incorporates **Specifications** so AGY can execute tasks accurately:
+
+```
+                  +----------------------------------------------+
+                  |            AGY SKILL PACKAGE                 |
+                  |                                              |
+                  |   1. SKILL.md (Instructions & Workflows)     |
+                  |   2. SPECIFICATIONS (Schemas, API Specs)     |
+                  |   3. EXECUTABLE TOOLS (Python/Shell Scripts)  |
+                  +----------------------------------------------+
+                                         |
+                                         v
+                  +----------------------------------------------+
+                  |         ANTIGRAVITY AGENT EXECUTION          |
+                  |  Reads Spec -> Validates Rules -> Runs Tool  |
+                  +----------------------------------------------+
+```
+
+1. **The Spec provides the rules**: "Claims table must contain `claim_status` values (`'PAID'`, `'DENIED'`, `'PENDING'`)."
+2. **The Skill provides the action**: AGY loads `SKILL.md`, reads the Spec, generates valid SQL, and executes the BigQuery query tool.
 
 ---
 
 ## 🧭 Plain-English Explanation for Every Persona
 
-```
-+---------------------------------------------------------------------------------------------------------+
-|                                  AGY SKILLS THROUGH EVERY LENS                                          |
-|                                                                                                         |
-|  👔 Business / Management  --> "Standard Operating Procedures (SOPs) & Business Guardrails"             |
-|  📊 Data Analysts & SMEs   --> "Data Catalog Recipes & Standard SQL Transformation Templates"           |
-|  🤖 AI & Software Engineers--> "Reusable Agent Tooling, Runbooks & Multi-Step Workflows"                |
-|  🛠️ IT & Cloud Admins     --> "Checked-in Security Policies, Deployment Scripts & Infrastructure Specs"|
-+---------------------------------------------------------------------------------------------------------+
-```
-
 ### 1. 👔 For Business Leaders, Product Managers & Executives
-> *"Skills are your company's **business guardrails and automated workflows**."*
-- **What it does for you**: Ensures AGY follows your company's brand voice, compliance rules, terminology, and approval processes.
-- **Real-world example**: A `healthcare-compliance` skill that forces AGY to sanitize output and ensure HIPAA compliance whenever generating member summaries.
+- **Specification**: Your business requirements, compliance policies (HIPAA rules), and PRD (Product Requirements Document).
+- **Skill**: The automated workflow package that enforces your PRD and ensures AGY produces compliant, business-ready outputs.
 
 ### 2. 📊 For Data Analysts, SMEs & Business Intelligence
-> *"Skills are **data catalog recipes and SQL guidelines**."*
-- **What it does for you**: Teaches AGY your data warehouse structure, table joins, business logic formulas (e.g., how "Gross Revenue" or "Active Member" is calculated), and Golden SQL queries.
-- **Real-world example**: A `bigquery-data-profiling` skill that tells AGY to always check categorical value distributions in BigQuery before writing SQL.
+- **Specification**: Data dictionary, BigQuery schema definitions (`COLUMNS`), and business logic formulas.
+- **Skill**: The `SKILL.md` container that provides Golden SQL queries and instructs AGY on how to join tables and profile data.
 
 ### 3. 🤖 For AI Developers, Data Scientists & Engineers
-> *"Skills are **modular prompt playbooks, ADK toolkits, and runbooks**."*
-- **What it does for you**: Provides AGY with executable Python scripts, API integration specs, and Google Agent Development Kit (ADK) agent scaffolding rules.
-- **Real-world example**: A `google-agents-cli-publish` skill that gives AGY the exact CLI flags and metadata formats to deploy and publish agents to Gemini Enterprise.
+- **Specification**: OpenAPI specifications (`swagger.json`), ADK agent tool function signatures, and JSON schemas.
+- **Skill**: The `.agents/skills/<name>/` folder containing `SKILL.md` instructions, prompt exemplars, and custom Python tool code.
 
 ### 4. 🛠️ For IT Administrators, DevOps & Cloud Architects
-> *"Skills are **version-controlled infrastructure automation and IAM specs**."*
-- **What it does for you**: Ensures infrastructure-as-code scripts (`gcloud`, Terraform, Docker) follow security policies, use correct regional locations, and enforce least-privilege IAM access.
-- **Real-world example**: An `accidental-data-loss-prevention` skill that forces AGY to pause and ask for human confirmation before executing any destructive `DROP TABLE` or `gcloud rm` command.
+- **Specification**: Security policies, IAM role definitions, and Terraform / `gcloud` resource configurations.
+- **Skill**: Automated guardrail skills (like `accidental-data-loss-prevention`) that intercept commands to prevent data deletion or non-compliant cloud deployments.
 
 ---
 
-## 📁 Anatomy of an AGY Skill (The Specification)
+## 📁 Anatomy of a Skill Package with Specifications
 
-An AGY Skill is stored as a simple folder in your workspace containing a mandatory **`SKILL.md`** specification file:
+An AGY Skill is stored as a directory in your project workspace, wrapping instructions and specifications together:
 
 ```
 my-project/
 └── .agents/
     └── skills/
-        └── my-custom-skill/
+        └── healthcare-payer-analytics/
             ├── SKILL.md              <-- (REQUIRED) The main skill instruction specification
-            ├── scripts/               <-- (OPTIONAL) Helper Python/Shell scripts AGY can execute
-            ├── templates/             <-- (OPTIONAL) Jinja/SQL templates
-            └── references/            <-- (OPTIONAL) Detailed API or schema documentation
+            ├── specs/                 <-- (SPECIFICATIONS) Database schemas, API specs, business contracts
+            │   ├── claims_schema.json
+            │   └── openapi_spec.yaml
+            └── scripts/               <-- (EXECUTABLE TOOLS) Python helper scripts executed by AGY
+                └── bq_query_runner.py
 ```
 
-### 📄 The `SKILL.md` Specification Format
+### 📄 The `SKILL.md` File: The Skill's Instruction Specification
 
-Every `SKILL.md` uses standard Markdown with YAML frontmatter at the top:
+Every `SKILL.md` uses YAML frontmatter metadata at the top, followed by Markdown specification instructions:
 
 ```markdown
 ---
-name: healthcare-payer-claims
+name: healthcare-payer-analytics
 description: >-
   Provides guidelines, SQL schemas, and Golden Queries for querying BigQuery healthcare claims and member eligibility.
 ---
 
-# Healthcare Payer Claims Skill
+# Healthcare Payer Analytics Skill
 
-## When to Use This Skill
-Activate this skill whenever the user asks questions regarding member eligibility, copay amounts, or claims payment/denial statuses.
-
-## Standard Business Rules
-1. Always join `claims.member_id` with `members.member_id`.
-2. Filter for `coverage_status = 'ACTIVE'` unless historical coverage is explicitly requested.
+## Specification Rules
+1. Refer to `specs/claims_schema.json` for exact BigQuery data types.
+2. Always join `claims.member_id` with `members.member_id`.
+3. Filter for `coverage_status = 'ACTIVE'` unless historical coverage is explicitly requested.
 
 ## Golden SQL Exemplar
 ```sql
@@ -94,18 +116,18 @@ WHERE claim_status = 'DENIED';
 
 ---
 
-## 🧠 How AGY Uses Skills: Progressive Disclosure
+## 🧠 How AGY Uses Skills & Specifications: Progressive Disclosure
 
-To avoid cluttering the AI's memory (context window) with thousands of lines of instructions:
-
-1. **Lightweight Discovery**: When AGY starts, it only reads the **`name`** and **`description`** of available skills (a few words).
-2. **On-Demand Activation**: When you ask a question (e.g., *"Find all denied claims"*), AGY recognizes that `healthcare-payer-claims` matches your goal and dynamically loads the full `SKILL.md` instructions into memory.
-3. **Execution**: AGY follows the skill's instructions step-by-step.
+To keep AI memory efficient:
+1. **Discovery**: AGY scans your workspace for skills and reads lightweight metadata (`name` and `description`).
+2. **On-Demand Loading**: When you ask a question (*"Find all denied claims"*), AGY loads the full `SKILL.md` and associated **Specification files** into context.
+3. **Execution**: AGY validates your request against the **Specification** and executes the **Skill's** tools.
 
 ---
 
-## 🛠️ How to Create and Share a Skill in 3 Steps
+## 🛠️ How to Create and Share Skills & Specifications
 
-1. **Create Directory**: Create `.agents/skills/<skill-name>/` inside your project repo.
-2. **Write `SKILL.md`**: Add a brief name, description, and markdown instructions.
-3. **Commit to Git**: Push the folder to GitHub! Any teammate or hackathon participant who clones the repo will automatically inherit the skill in AGY!
+1. **Create Directory**: Create `.agents/skills/<skill-name>/` inside your project repository.
+2. **Add Specifications**: Place your JSON schemas, API specs, or Markdown rules inside the skill directory.
+3. **Write `SKILL.md`**: Define the name, description, and execution rules.
+4. **Commit to Git**: Push to GitHub! Every team member automatically receives the updated Skills & Specifications when cloning the repository!
